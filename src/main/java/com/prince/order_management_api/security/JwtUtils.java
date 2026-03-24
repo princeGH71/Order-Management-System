@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -12,8 +13,10 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    private static final String SECRET = "princekumarsoni";
-    private static final long EXPIRATION_MS = 5*60*1000; // 5 min
+    @Value("${jwt.secret}")
+    private String SECRET;
+    
+    private long EXPIRATION_MS = 5*60*1000; // 5 min
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());

@@ -1,4 +1,4 @@
-package com.prince.order_management_api.service.impl;
+package com.prince.order_management_api.service;
 
 
 import com.prince.order_management_api.dto.request.LoginRequest;
