@@ -16,8 +16,21 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000 # 10 minutes in milliseconds
+      
+      
 server:
   port: 8085
   
 jwt:
   secret: "jwfasjncifknjwncdcnwqwcdwmcWNCNDHSACWNKJFEUVSDF"
+
+  

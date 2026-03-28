@@ -8,6 +8,9 @@ import com.prince.order_management_api.repository.ProductRepository;
 import com.prince.order_management_api.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     
     @Override
+    @CachePut(value = "products", key = "#result.id")
     public ProductResponse createProduct(ProductRequest request) {
         Product product = Product.builder()
                 .name(request.getName())
@@ -34,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products", key = "#id")
     public ProductResponse getProductById(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ApiException("Product not found.", HttpStatus.NOT_FOUND)
@@ -42,14 +47,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products-all")
     public List<ProductResponse> getAllProducts() {
         List<Product> productList = productRepository.findAll();
+        log.info("db hit");
         return productList.stream()
                 .map(product -> mapToResponse(product))
                 .collect(Collectors.toList());
     }
 
     @Override
+    @CachePut(value = "products", key = "#id")
+    @CacheEvict(value = "products-all", allEntries = true)
     public ProductResponse updateProduct(UUID id, ProductRequest request) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ApiException("Product not found.", HttpStatus.NOT_FOUND)
@@ -64,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = {"products", "products-all"}, allEntries = true)
     public void deleteProduct(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ApiException("Product not found.", HttpStatus.NOT_FOUND)

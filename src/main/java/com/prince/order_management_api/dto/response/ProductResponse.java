@@ -3,13 +3,14 @@ package com.prince.order_management_api.dto.response;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Builder
-public class ProductResponse {
+public class ProductResponse implements Serializable {
     private UUID id;
     private String name;
     private String description;
