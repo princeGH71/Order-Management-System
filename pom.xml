@@ -104,6 +104,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
 		
 <!--Jackson was not able to serialize LOCALDateTime of Java 8 so we have to use this dependency-->
 		<dependency>

@@ -9,7 +9,9 @@ import com.prince.order_management_api.entity.OrderItem;
 import com.prince.order_management_api.entity.Product;
 import com.prince.order_management_api.entity.User;
 import com.prince.order_management_api.enums.OrderStatus;
+import com.prince.order_management_api.event.OrderPlacedEvent;
 import com.prince.order_management_api.exception.ApiException;
+import com.prince.order_management_api.kafka.OrderEventProducer;
 import com.prince.order_management_api.repository.OrderRepository;
 import com.prince.order_management_api.repository.ProductRepository;
 import com.prince.order_management_api.repository.UserRepository;
@@ -36,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final OrderEventProducer orderEventProducer;
     
     @Override
     @Transactional
@@ -97,6 +100,15 @@ public class OrderServiceImpl implements OrderService {
         
 //        save order - cascades and saves all items too
         Order saved = orderRepository.save(order);
+
+        // ← publish event after successful save
+        orderEventProducer.publishOrderPlaced(new OrderPlacedEvent(
+                saved.getId(),
+                user.getEmail(),
+                saved.getTotalAmount(),
+                saved.getItems().size()
+        ));
+        
         return mapToResponse(saved);
     }
 
