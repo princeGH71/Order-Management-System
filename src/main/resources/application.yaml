@@ -44,6 +44,6 @@ server:
   port: 8085
   
 jwt:
-  secret: "jwfasjncifknjwncdcnwqwcdwmcWNCNDHSACWNKJFEUVSDF"
+  secret: "Enter Secret Key"
 
   
