@@ -45,10 +45,6 @@ server:
   port: 8085
   
 jwt:
-<<<<<<< HEAD
-  secret: "Enter Secret Key"
-=======
   secret: ${JWT_SECRET:your-local-default-secret-for-dev}
->>>>>>> 5b3ba38 (feat: order management API with JWT, Redis, Kafka, Docker)
 
   
